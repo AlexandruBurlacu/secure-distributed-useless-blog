@@ -10,13 +10,13 @@ WORKDIR /home/usser/app
 
 COPY . .
 
-EXPOSE 5000
+# EXPOSE 5000
 
 RUN pip install -r requirements.txt
 
-USER root
+# USER root
 
-RUN chmod -R 0504 /home/usser/app
+# RUN chmod -R 0504 /home/usser/app
 
 USER usser
 

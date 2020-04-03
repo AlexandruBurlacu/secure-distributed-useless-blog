@@ -2,6 +2,15 @@ version: '2.4'
 
 services:
 
+  rabbitmq:
+    # This variant includes the management UI.
+    image: 'rabbitmq:3.6-management-alpine'
+    ports:
+      # The standard AMQP protocol port
+      - '5672:5672'
+      # HTTP management UI
+      - '15672:15672'
+
   edge_service:
     build:
       context: ./edge_service_v2
@@ -66,12 +75,12 @@ services:
       - SETFCAP
 
 
-  # user_service_db:
-  #   container_name: user_service_v1_db
-  #   build:
-  #     context: ./user_service/db
-  #     dockerfile: Dockerfile
-  #   environment:
-  #     - POSTGRES_USER=postgres
-  #     - POSTGRES_PASSWORD=postgres
+  user_service_db:
+    container_name: user_service_v1_db
+    build:
+      context: ./user_service/db
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
 

@@ -13,7 +13,7 @@ services:
       - '15672:15672'
 
   edge_service:
-    container_name: edge_service
+    container_name: edge_service_v1
     build:
       context: ./edge_service
       dockerfile: Dockerfile
@@ -27,6 +27,7 @@ services:
       # - SECRET_KEY=change_me_in_prod
     depends_on:
       - user_service
+      - rabbitmq
     cap_drop: 
       - MKNOD
       - CHOWN
@@ -59,6 +60,7 @@ services:
       # - SECRET_KEY=change_me_in_prod
     depends_on:
       - user_service_db
+      - rabbitmq
     cap_drop: 
       - MKNOD
       - CHOWN

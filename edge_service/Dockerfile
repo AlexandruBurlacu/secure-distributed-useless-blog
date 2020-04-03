@@ -18,4 +18,5 @@ RUN chmod -R 1555 /home/usser/app
 
 USER usser
 
-CMD [ "python", "app.py" ]
+# CMD [ "python", "app.py" ]
+CMD [ "gunicorn", "--worker-class gevent", "-w 10", "--certfile certificate.pem", "--keyfile key.pem", "-b 0.0.0.0:5000", "wsgi:app" ]

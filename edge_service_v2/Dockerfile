@@ -14,7 +14,7 @@ RUN pip install -r requirements.txt
 
 USER root
 
-RUN chmod -R 0504 /home/usser/app
+RUN chmod -R 1555 /home/usser/app
 
 USER usser
 

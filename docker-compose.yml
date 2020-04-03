@@ -1,0 +1,48 @@
+version: '2.3'
+
+services:
+
+  edge_service:
+    # container_name: edge_service_v2
+    build:
+      context: ./edge_service_v2
+      dockerfile: Dockerfile
+    # volumes:
+    #   - '.:/usr/src/app'
+    ports:
+      - 5000:5000
+    environment:
+      # - APP_NAME=edge_service
+      - FLASK_DEBUG=1
+      - PYTHONUNBUFFERED=0
+      # - APP_SETTINGS=project.server.config.ProductionConfig
+      # - SECRET_KEY=change_me_in_prod
+    depends_on:
+      - user_service
+
+  user_service:
+    # container_name: user_service_v1
+    build:
+      context: ./user_service
+      dockerfile: Dockerfile
+    ports:
+      - 5001:5000
+    environment:
+      # - APP_NAME=user_service
+      - FLASK_DEBUG=1
+      - PYTHONUNBUFFERED=0
+      # - APP_SETTINGS=project.server.config.ProductionConfig
+      # - DATABASE_URL=postgres://postgres:postgres@user_service_db:5432/users_dev
+      # - DATABASE_TEST_URL=postgres://postgres:postgres@user_service_db:5432/users_test
+      # - SECRET_KEY=change_me_in_prod
+    # depends_on:
+    #   - user_service_db
+
+  # user_service_db:
+  #   container_name: user_service_v1_db
+  #   build:
+  #     context: ./user_service/db
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=postgres

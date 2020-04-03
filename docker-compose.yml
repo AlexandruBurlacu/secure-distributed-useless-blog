@@ -3,6 +3,7 @@ version: '2.4'
 services:
 
   rabbitmq:
+    container_name: rmq
     # This variant includes the management UI.
     image: 'rabbitmq:3.6-management-alpine'
     ports:
@@ -12,8 +13,9 @@ services:
       - '15672:15672'
 
   edge_service:
+    container_name: edge_service
     build:
-      context: ./edge_service_v2
+      context: ./edge_service
       dockerfile: Dockerfile
     ports:
       - 5000:5000
@@ -43,11 +45,10 @@ services:
 
 
   user_service:
+    container_name: user_service_v1
     build:
       context: ./user_service
       dockerfile: Dockerfile
-    # ports:
-    #   - 5001:5000
     environment:
       # - APP_NAME=user_service
       - FLASK_DEBUG=1
@@ -56,8 +57,8 @@ services:
       # - DATABASE_URL=postgres://postgres:postgres@user_service_db:5432/users_dev
       # - DATABASE_TEST_URL=postgres://postgres:postgres@user_service_db:5432/users_test
       # - SECRET_KEY=change_me_in_prod
-    # depends_on:
-    #   - user_service_db
+    depends_on:
+      - user_service_db
     cap_drop: 
       - MKNOD
       - CHOWN

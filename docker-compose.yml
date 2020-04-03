@@ -1,14 +1,11 @@
-version: '2.3'
+version: '2.4'
 
 services:
 
   edge_service:
-    # container_name: edge_service_v2
     build:
       context: ./edge_service_v2
       dockerfile: Dockerfile
-    # volumes:
-    #   - '.:/usr/src/app'
     ports:
       - 5000:5000
     environment:
@@ -20,8 +17,8 @@ services:
     depends_on:
       - user_service
 
+
   user_service:
-    # container_name: user_service_v1
     build:
       context: ./user_service
       dockerfile: Dockerfile
@@ -46,3 +43,4 @@ services:
   #   environment:
   #     - POSTGRES_USER=postgres
   #     - POSTGRES_PASSWORD=postgres
+

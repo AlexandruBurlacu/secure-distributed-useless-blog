@@ -2,6 +2,19 @@ version: '2.4'
 
 services:
 
+  secrets:
+    container_name: secrets
+    image: vault:1.3.4
+    ports:
+      - "8200:8200"
+    cap_add:
+      - IPC_LOCK
+    volumes: 
+      - ./volumes/config:/vault/config
+      - ./volumes/file:/vault/file
+      - ./volumes/logs:/vault/logs
+    entrypoint: vault server -config=/vault/config/vault.json
+
   rabbitmq:
     container_name: rmq
     # This variant includes the management UI.

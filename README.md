@@ -9,6 +9,7 @@ OpenSSL
 
 Vault
 - https://www.vaultproject.io/
+- https://www.hashicorp.com/blog/certificate-management-with-vault/
 
 Flask
 - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-iv-database

@@ -15,16 +15,6 @@ services:
       - ./volumes/logs:/vault/logs
     entrypoint: vault server -config=/vault/config/vault.json
 
-  rabbitmq:
-    container_name: rmq
-    # This variant includes the management UI.
-    image: 'rabbitmq:3.6-management-alpine'
-    ports:
-      # The standard AMQP protocol port
-      - '5672:5672'
-      # HTTP management UI
-      - '15672:15672'
-
   edge_service:
     container_name: edge_service_v1
     build:
@@ -40,7 +30,6 @@ services:
       # - SECRET_KEY=change_me_in_prod
     depends_on:
       - user_service
-      - rabbitmq
     cap_drop: 
       - MKNOD
       - CHOWN
@@ -73,7 +62,6 @@ services:
       # - SECRET_KEY=change_me_in_prod
     depends_on:
       - user_service_db
-      - rabbitmq
     cap_drop: 
       - MKNOD
       - CHOWN

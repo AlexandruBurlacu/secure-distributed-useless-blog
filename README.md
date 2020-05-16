@@ -1,3 +1,17 @@
+## TODO
+- Publish api as Swagger docs
+- Implement DB tables + SQLAlchemy
+- Validate inputs
+- Implement controllers + rbac
+- Make Vault PKI and integrate with Nginx
+
+## What was done
+- Microservices
+- NGINX load balancing and proxy-ing
+- Network segmentation
+- HTTPS for outbound connections
+
+
 [Deprecated] RabbitMQ
 - https://dev.to/usamaashraf/microservices--rabbitmq-on-docker-e2f
 - https://www.rabbitmq.com/getstarted.html
@@ -29,9 +43,11 @@ RBAC
 - https://github.com/tonyseek/simple-rbac
 - https://github.com/casbin/pycasbin
 
-## TODO
-- Micronetworks in compose
-- Make Vault PKI and integrate with Nginx
-- Implement DB tables + SQLAlchemy
-- Implement controllers + rbac
-- Publish api as Swagger docs
+Others:
+- https://developer.okta.com/blog/2020/03/23/microservice-security-patterns
+- JWT
+- https://pythonhosted.org/Flask-Security/features.html
+- https://blog.miguelgrinberg.com/post/two-factor-authentication-with-flask
+- https://github.com/OWASP/Docker-Security/blob/master/D03%20-%20Network%20Segmentation%20and%20Firewalling.md
+- https://success.docker.com/article/networking
+

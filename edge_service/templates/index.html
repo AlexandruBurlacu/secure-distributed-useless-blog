@@ -53,6 +53,13 @@
                     <p>{{ catchphrase }} - {{ user['name'] }}</p>
                 {% endfor %}
             </div>
+
+            <div class="col-lg-6">
+                {% for idx, blog in blogs %}
+                    <h4>User {{ idx }}: {{ blog['title'] }}</h4>
+                    <p>{{ blog['author'] }}</p>
+                {% endfor %}
+            </div>
         </div>
  
         <footer class="footer">

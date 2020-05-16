@@ -14,10 +14,9 @@ services:
       - ./volumes/file:/vault/file
       - ./volumes/logs:/vault/logs
     entrypoint: vault server -config=/vault/config/vault.json
-    networks:
-      - global_network
 
   edge_service:
+    container_name: edge_service_v1
     build:
       context: ./edge_service
       dockerfile: Dockerfile
@@ -31,7 +30,6 @@ services:
       # - SECRET_KEY=change_me_in_prod
     depends_on:
       - user_service
-      - blog_service
     cap_drop: 
       - MKNOD
       - CHOWN
@@ -47,21 +45,10 @@ services:
       - NET_BIND_SERVICE
       - SYS_CHROOT
       - SETFCAP
-    networks:
-      - global_network
 
-
-  user_service_proxy:
-    image: nginx:1.18.0-alpine
-    volumes:
-      - "./user_service/nginx.conf:/etc/nginx/conf.d/default.conf"
-    networks:
-      - user_service_network
-      - global_network
-    depends_on:
-      - user_service
 
   user_service:
+    container_name: user_service_v1
     build:
       context: ./user_service
       dockerfile: Dockerfile
@@ -90,78 +77,14 @@ services:
       - NET_BIND_SERVICE
       - SYS_CHROOT
       - SETFCAP
-    networks:
-      - user_service_network
-      # - global_network
+
 
   user_service_db:
+    container_name: user_service_v1_db
     build:
       context: ./user_service/db
       dockerfile: Dockerfile
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    networks:
-      - user_service_network
-      # - global_network
 
-
-  blog_service_proxy:
-    image: nginx:1.18.0-alpine
-    volumes:
-      - "./blog_service/nginx.conf:/etc/nginx/conf.d/default.conf"
-    networks:
-      - blog_service_network
-      - global_network
-    depends_on:
-      - blog_service
-
-  blog_service:
-    build:
-      context: ./blog_service
-      dockerfile: Dockerfile
-    environment:
-      # - APP_NAME=blog_service
-      - FLASK_DEBUG=1
-      - PYTHONUNBUFFERED=0
-      # - APP_SETTINGS=project.server.config.ProductionConfig
-      # - DATABASE_URL=postgres://postgres:postgres@blog_service_db:5432/blogs_dev
-      # - DATABASE_TEST_URL=postgres://postgres:postgres@blog_service_db:5432/blogs_test
-      # - SECRET_KEY=change_me_in_prod
-    depends_on:
-      - blog_service_db
-    cap_drop: 
-      - MKNOD
-      - CHOWN
-      - NET_RAW
-      - SETPCAP
-      - AUDIT_WRITE
-      - DAC_OVERRIDE
-      - FOWNER
-      - FSETID
-      - KILL
-      - SETGID
-      - SETUID
-      - NET_BIND_SERVICE
-      - SYS_CHROOT
-      - SETFCAP
-    networks:
-      - blog_service_network
-      # - global_network
-
-  blog_service_db:
-    build:
-      context: ./blog_service/db
-      dockerfile: Dockerfile
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    networks:
-      - blog_service_network
-      # - global_network
-
-
-networks:
-  user_service_network:
-  blog_service_network:
-  global_network:

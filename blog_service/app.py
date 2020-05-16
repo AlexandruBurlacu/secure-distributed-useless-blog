@@ -5,10 +5,10 @@ app = Flask(__name__)
 # basic route
 @app.route("/")
 def main():
-    return jsonify({"user_list": [
-       {"name": "user1"},
-       {"name": "user2"},
-       {"name": "user3"}
+    return jsonify({"blog_list": [
+       {"title": "blog1", "author": "user1"},
+       {"title": "blog2", "author": "user1"},
+       {"title": "blog3", "author": "user2"}
     ]})
 
 if __name__ == "__main__":

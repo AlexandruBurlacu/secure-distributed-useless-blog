@@ -1,6 +1,16 @@
+## DB Schema (not really)
+
+There are `users` and there are `blogs`. Every user can have multiple blog posts. A blog has just one author/user. 1:n relation.
+
+Use Case: Find all blogs that are written by someone Franklin:
+```sql
+SELECT * FROM blogs WHERE blogs.author_handle = (SELECT handle FROM users WHERE name MATCHES "% Franklin %");
+-- kinda, what a shame my database is divided between microservices
+```
+
 ## TODO
 - Publish api as Swagger docs
-- Implement DB tables + SQLAlchemy
+- Implement DB tables + SQLAlchemy (model)
 - Validate inputs
 - Implement controllers + rbac
 - Make Vault PKI and integrate with Nginx

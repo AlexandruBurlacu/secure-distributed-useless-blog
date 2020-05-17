@@ -1,4 +1,19 @@
-CREATE DATABASE users_prod;
-CREATE DATABASE users_stage;
+-- CREATE DATABASE users_prod;
 CREATE DATABASE users_dev;
-CREATE DATABASE users_test;
+
+\connect users_dev
+
+CREATE TABLE users (
+    id int NOT NULL GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR(128) NOT NULL,
+    handle VARCHAR(32) NOT NULL UNIQUE,
+    PRIMARY KEY (id)
+);
+
+-- CREATE TABLE users_prod.users (
+--     id int,
+--     name varchar(128),
+--     handle varchar(32)
+-- )
+
+INSERT INTO users (name, handle) VALUES ('Kal-El', '@realsuperman'), ('Logan', '@wolverine'), ('Professor Xavier', '@profxavier');

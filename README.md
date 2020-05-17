@@ -8,9 +8,19 @@ SELECT * FROM blogs WHERE blogs.author_handle = (SELECT handle FROM users WHERE 
 -- kinda, what a shame my database is divided between microservices
 ```
 
+## The API
+```
+GET /users
+GET /users/:handle
+POST /users
+
+GET /blogs
+GET /blogs/:slug
+POST /blogs
+```
+
 ## TODO
 - Publish api as Swagger docs
-- Implement DB tables + SQLAlchemy (model)
 - Validate inputs
 - Implement controllers + rbac
 - Make Vault PKI and integrate with Nginx
@@ -20,7 +30,7 @@ SELECT * FROM blogs WHERE blogs.author_handle = (SELECT handle FROM users WHERE 
 - NGINX load balancing and proxy-ing
 - Network segmentation
 - HTTPS for outbound connections
-
+- Implement DB tables + SQLAlchemy
 
 [Deprecated] RabbitMQ
 - https://dev.to/usamaashraf/microservices--rabbitmq-on-docker-e2f

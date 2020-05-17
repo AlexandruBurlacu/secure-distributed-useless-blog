@@ -66,12 +66,10 @@ services:
       context: ./user_service
       dockerfile: Dockerfile
     environment:
-      # - APP_NAME=user_service
       - FLASK_DEBUG=1
       - PYTHONUNBUFFERED=0
       # - APP_SETTINGS=project.server.config.ProductionConfig
-      # - DATABASE_URL=postgres://postgres:postgres@user_service_db:5432/users_dev
-      # - DATABASE_TEST_URL=postgres://postgres:postgres@user_service_db:5432/users_test
+      - DATABASE_URL=postgres://postgres:postgres@user_service_db:5432/users_dev
       # - SECRET_KEY=change_me_in_prod
     depends_on:
       - user_service_db
@@ -121,12 +119,10 @@ services:
       context: ./blog_service
       dockerfile: Dockerfile
     environment:
-      # - APP_NAME=blog_service
       - FLASK_DEBUG=1
       - PYTHONUNBUFFERED=0
       # - APP_SETTINGS=project.server.config.ProductionConfig
-      # - DATABASE_URL=postgres://postgres:postgres@blog_service_db:5432/blogs_dev
-      # - DATABASE_TEST_URL=postgres://postgres:postgres@blog_service_db:5432/blogs_test
+      - DATABASE_URL=postgres://postgres:postgres@blog_service_db:5432/blogs_dev
       # - SECRET_KEY=change_me_in_prod
     depends_on:
       - blog_service_db

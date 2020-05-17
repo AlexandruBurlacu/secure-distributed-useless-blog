@@ -35,29 +35,30 @@
  
         <div class="row marketing">
             <div class="col-lg-6">
-                <h4>Blog 1</h4>
+                <!-- <h4>Blog 1</h4>
                 <p>No man has a good enough memory to be a successful liar - Abraham Lincoln</p>
  
                 <h4>Blog 2</h4>
                 <p>A successful man is one who makes more money than his wife can spend. A successful woman is one who can find such a man.</p>
  
                 <h4>Blog 3</h4>
-                <p>I can resist everything except temptation.</p>
+                <p>I can resist everything except temptation.</p> -->
 
-            <br>
-            <hr>
+            <!-- <br>
+            <hr> -->
 
             <div class="col-lg-6">
                 {% for idx, user, catchphrase in users %}
-                    <h4>User {{ idx }}: {{ user['name'] }}</h4>
+                    <h4>User {{ idx }}: {{ user['name'] }}</h4><p>{{ user['handle'] }}</p>
                     <p>{{ catchphrase }} - {{ user['name'] }}</p>
                 {% endfor %}
             </div>
 
             <div class="col-lg-6">
                 {% for idx, blog in blogs %}
-                    <h4>User {{ idx }}: {{ blog['title'] }}</h4>
-                    <p>{{ blog['author'] }}</p>
+                    <h4>Blog post {{ idx }}: {{ blog['title'] }}</h4>
+                    <p>{{ blog['author_handle'] }}</p>
+                    <p>{{ blog['content'] }}</p>
                 {% endfor %}
             </div>
         </div>

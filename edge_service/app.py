@@ -25,7 +25,7 @@ def main():
     blog_list = blog_resp.json()
 
     return render_template('index.html', users=make_full_user_stories(user_list['user_list']),
-                                        blogs=[(idx, blog) for idx, blog in enumerate(blog_list["blog_list"])])
+                                         blogs=[(idx, blog) for idx, blog in enumerate(blog_list["blog_list"])])
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

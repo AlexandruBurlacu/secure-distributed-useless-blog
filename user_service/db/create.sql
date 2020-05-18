@@ -3,7 +3,7 @@ CREATE DATABASE users_dev;
 
 \connect users_dev
 
-CREATE TYPE ROLE_T AS ENUM ('admin', 'user', 'notloged')
+CREATE TYPE ROLE_T AS ENUM ('admin', 'user', 'notloged');
 
 CREATE TABLE users (
     id int NOT NULL GENERATED ALWAYS AS IDENTITY,

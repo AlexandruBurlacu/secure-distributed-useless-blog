@@ -13,6 +13,8 @@ CREATE TABLE users (
     PRIMARY KEY (id)
 );
 
+GRANT SELECT, UPDATE(name), INSERT(name, handle, user_role), DELETE ON users TO postgres;
+
 -- CREATE TABLE users_prod.users (
 --     id int,
 --     name varchar(128),

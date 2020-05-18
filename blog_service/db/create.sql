@@ -12,6 +12,8 @@ CREATE TABLE blogs (
     PRIMARY KEY (id)
 );
 
+GRANT SELECT, UPDATE(title, content), INSERT(title, slug, content, author_handle), DELETE ON blogs TO postgres;
+
 -- CREATE TABLE blogs_prod.blogs (
 --     id int,
 --     title varchar(128),

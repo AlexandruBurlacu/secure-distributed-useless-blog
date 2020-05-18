@@ -1,3 +1,7 @@
+# `I Ain't Gonna Need It` blog, a masters project
+
+Below you can find the links that I used to learn how to do a distributed + secure application, and some idea-pads. Enjoy.
+
 ## DB Schema (not really)
 
 There are `users` and there are `blogs`. Every user can have multiple blog posts. A blog has just one author/user. 1:n relation.
@@ -10,13 +14,21 @@ SELECT * FROM blogs WHERE blogs.author_handle = (SELECT handle FROM users WHERE 
 
 ## The API
 ```
-GET /users
-GET /users/:handle
+GET /users (done)
+GET /users/:handle (done)
+GET /users/blogs?user_name=partial_name
 POST /users
+PUT /users/:handle
+DELETE /users/:handle
 
-GET /blogs
-GET /blogs/:slug
+GET /blogs (done)
+GET /blogs/:slug (done)
+GET /blogs?title=partial_title
 POST /blogs
+PUT /blogs/:slug
+DELETE /blogs/:slug
+
+POST /auth (via JWT)
 ```
 
 ## TODO
@@ -26,11 +38,13 @@ POST /blogs
 - Make Vault PKI and integrate with Nginx
 
 ## What was done
-- Microservices
+- Microservices + API Gateway (kinda)
 - NGINX load balancing and proxy-ing
-- Network segmentation
-- HTTPS for outbound connections
-- Implement DB tables + SQLAlchemy
+- Network (micro-)segmentation
+- HTTPS for outbound connections, self-signed, for now
+- Postgres DBs with SQLAlchemy
+
+## Used links
 
 [Deprecated] RabbitMQ
 - https://dev.to/usamaashraf/microservices--rabbitmq-on-docker-e2f
@@ -52,6 +66,7 @@ Flask
 - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-iv-database
 - https://www.bogotobogo.com/python/Flask/Python_Flask_Blog_App_Tutorial_1.php
 - https://charlesleifer.com/blog/how-to-make-a-flask-blog-in-one-hour-or-less/
+- https://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask
 
 SQLAlchemy
 - https://towardsdatascience.com/sqlalchemy-python-tutorial-79a577141a91
@@ -63,11 +78,16 @@ RBAC
 - https://github.com/tonyseek/simple-rbac
 - https://github.com/casbin/pycasbin
 
+JWT and Auth in general
+- https://realpython.com/token-based-authentication-with-flask/
+- https://blog.tecladocode.com/simple-jwt-authentication-with-flask-jwt/
+- https://blog.miguelgrinberg.com/post/two-factor-authentication-with-flask
+- https://geekflare.com/securing-flask-api-with-jwt/
+- https://codeburst.io/jwt-authorization-in-flask-c63c1acf4eeb
+
 Others:
 - https://developer.okta.com/blog/2020/03/23/microservice-security-patterns
-- JWT
 - https://pythonhosted.org/Flask-Security/features.html
-- https://blog.miguelgrinberg.com/post/two-factor-authentication-with-flask
 - https://github.com/OWASP/Docker-Security/blob/master/D03%20-%20Network%20Segmentation%20and%20Firewalling.md
 - https://success.docker.com/article/networking
 

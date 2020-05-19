@@ -46,6 +46,11 @@ POST /auth (via JWT)
 - Validate inputs
 - Publish api as Swagger (not, just in this markdown) docs
 
+
+### Current issues
+- It is possible to create a blog by an unexistent user
+
+
 ## Used links
 
 [Deprecated] RabbitMQ
@@ -128,13 +133,6 @@ Initializing Tue May 19 21:28:51 UTC 2020
 [INFO]      * Update instruction found: [useless-blog_blog_service:latest]
 [INFO]      * Update instruction found: [useless-blog_user_service:latest]
 [INFO]      * Update instruction found: [useless-blog_edge_service:latest]
-
-[INFO] 4.9  - Ensure COPY is used instead of ADD in Dockerfile
-[INFO]      * ADD in image history: [useless-blog_blog_service:latest]
-[INFO]      * ADD in image history: [useless-blog_user_service:latest]
-[INFO]      * ADD in image history: [useless-blog_edge_service:latest]
-[INFO]      * ADD in image history: [useless-blog_user_service_db:latest]
-[INFO]      * ADD in image history: [useless-blog_blog_service_db:latest]
 
 [INFO] 5 - Container Runtime
 [PASS] 5.1  - Ensure AppArmor Profile is Enabled

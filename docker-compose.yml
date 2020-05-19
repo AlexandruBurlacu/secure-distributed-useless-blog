@@ -97,6 +97,7 @@ services:
       # - global_network
 
   user_service_db:
+    user: postgres
     build:
       context: ./user_service/db
       dockerfile: Dockerfile
@@ -153,6 +154,7 @@ services:
       # - global_network
 
   blog_service_db:
+    user: postgres
     build:
       context: ./blog_service/db
       dockerfile: Dockerfile

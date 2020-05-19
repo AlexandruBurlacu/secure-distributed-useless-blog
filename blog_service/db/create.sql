@@ -8,7 +8,7 @@ CREATE TABLE blogs (
     title VARCHAR(128) NOT NULL,
     slug VARCHAR(256) NOT NULL UNIQUE,
     content TEXT NOT NULL,
-    author_handle VARCHAR(32) NOT NULL UNIQUE,
+    author_handle VARCHAR(32) NOT NULL,
     PRIMARY KEY (id)
 );
 

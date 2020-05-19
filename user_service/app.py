@@ -35,7 +35,6 @@ def get_user_by_handle(handle):
 @app.route("/users/<handle>", methods=["PUT"])
 def update_user_by_handle(handle):
     data = request.get_json(force=True)
-    handle = data['handle']
     name = data['name']
 
     if len(handle) > 32:
@@ -45,9 +44,7 @@ def update_user_by_handle(handle):
         return make_response({"error": "invalid handle, must start with `@`"}, status=400)
 
     users_table = get_users_table_handle()
-    res = CONNECTION.execute(users_table.update().where(users_table.c.handle == handle).values({
-        "name": name
-    }))
+    res = CONNECTION.execute(users_table.update().where(users_table.c.handle == handle).values(name=name))
     return make_response(data, status=201)
 
 
@@ -62,7 +59,7 @@ def delete_user_by_handle(handle):
 
     users_table = get_users_table_handle()
     res = CONNECTION.execute(users_table.delete().where(users_table.c.handle == handle))
-    return make_response({"status": "deleted"}, status=201)
+    return make_response({"status": "deleted"}, status=200)
 
 
 @app.route("/users", methods=["POST"])

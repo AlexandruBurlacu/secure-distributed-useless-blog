@@ -34,6 +34,7 @@ POST /auth (via JWT)
 ## TODO
 - Rbac
 - JWT Auth
+- Minor chores (PID limits, healthchecks, etc)
 - Make Vault PKI and integrate with Nginx
 
 ## What was done
@@ -92,3 +93,155 @@ Others:
 - https://github.com/OWASP/Docker-Security/blob/master/D03%20-%20Network%20Segmentation%20and%20Firewalling.md
 - https://success.docker.com/article/networking
 
+
+## Docker Security Checks audit (relevant parts)
+
+```
+
+# ------------------------------------------------------------------------------
+# Docker Bench for Security v1.3.4
+#
+# Docker, Inc. (c) 2015-
+#
+# Checks for dozens of common best-practices around deploying Docker containers in production.
+# Inspired by the CIS Docker Community Edition Benchmark v1.1.0.
+# ------------------------------------------------------------------------------
+
+Initializing Tue May 19 21:28:51 UTC 2020
+
+[INFO] 4 - Container Images and Build File
+[WARN] 4.1  - Ensure a user for the container has been created
+[WARN]      * Running as root: useless-blog_blog_service_proxy_1
+[WARN]      * Running as root: useless-blog_user_service_proxy_1
+[WARN]      * Running as root: secrets
+[WARN]      * Running as root: useless-blog_blog_service_db_1
+[WARN]      * Running as root: useless-blog_user_service_db_1
+
+[WARN] 4.6  - Ensure HEALTHCHECK instructions have been added to the container image
+[WARN]      * No Healthcheck found: [useless-blog_blog_service:latest]
+[WARN]      * No Healthcheck found: [useless-blog_user_service:latest]
+[WARN]      * No Healthcheck found: [useless-blog_edge_service:latest]
+[WARN]      * No Healthcheck found: [useless-blog_user_service_db:latest]
+[WARN]      * No Healthcheck found: [useless-blog_blog_service_db:latest]
+
+[INFO] 4.7  - Ensure update instructions are not use alone in the Dockerfile
+[INFO]      * Update instruction found: [useless-blog_blog_service:latest]
+[INFO]      * Update instruction found: [useless-blog_user_service:latest]
+[INFO]      * Update instruction found: [useless-blog_edge_service:latest]
+
+[INFO] 4.9  - Ensure COPY is used instead of ADD in Dockerfile
+[INFO]      * ADD in image history: [useless-blog_blog_service:latest]
+[INFO]      * ADD in image history: [useless-blog_user_service:latest]
+[INFO]      * ADD in image history: [useless-blog_edge_service:latest]
+[INFO]      * ADD in image history: [useless-blog_user_service_db:latest]
+[INFO]      * ADD in image history: [useless-blog_blog_service_db:latest]
+
+[INFO] 5 - Container Runtime
+[PASS] 5.1  - Ensure AppArmor Profile is Enabled
+[WARN] 5.2  - Ensure SELinux security options are set, if applicable
+[WARN]      * No SecurityOptions Found: useless-blog_edge_service_1
+[WARN]      * No SecurityOptions Found: useless-blog_blog_service_proxy_1
+[WARN]      * No SecurityOptions Found: useless-blog_user_service_proxy_1
+[WARN]      * No SecurityOptions Found: useless-blog_blog_service_1
+[WARN]      * No SecurityOptions Found: useless-blog_user_service_1
+[WARN]      * No SecurityOptions Found: secrets
+[WARN]      * No SecurityOptions Found: useless-blog_blog_service_db_1
+[WARN]      * No SecurityOptions Found: useless-blog_user_service_db_1
+[WARN] 5.3  - Ensure Linux Kernel Capabilities are restricted within containers
+[WARN]      * Capabilities added: CapAdd=[IPC_LOCK] to secrets
+[PASS] 5.4  - Ensure privileged containers are not used
+[PASS] 5.5  - Ensure sensitive host system directories are not mounted on containers
+[PASS] 5.6  - Ensure ssh is not run within containers
+[PASS] 5.7  - Ensure privileged ports are not mapped within containers
+
+[PASS] 5.9  - Ensure the host's network namespace is not shared
+[WARN] 5.10  - Ensure memory usage for container is limited
+[WARN]      * Container running without memory restrictions: useless-blog_edge_service_1
+[WARN]      * Container running without memory restrictions: useless-blog_blog_service_proxy_1
+[WARN]      * Container running without memory restrictions: useless-blog_user_service_proxy_1
+[WARN]      * Container running without memory restrictions: useless-blog_blog_service_1
+[WARN]      * Container running without memory restrictions: useless-blog_user_service_1
+[WARN]      * Container running without memory restrictions: secrets
+[WARN]      * Container running without memory restrictions: useless-blog_blog_service_db_1
+[WARN]      * Container running without memory restrictions: useless-blog_user_service_db_1
+[WARN] 5.11  - Ensure CPU priority is set appropriately on the container
+[WARN]      * Container running without CPU restrictions: useless-blog_edge_service_1
+[WARN]      * Container running without CPU restrictions: useless-blog_blog_service_proxy_1
+[WARN]      * Container running without CPU restrictions: useless-blog_user_service_proxy_1
+[WARN]      * Container running without CPU restrictions: useless-blog_blog_service_1
+[WARN]      * Container running without CPU restrictions: useless-blog_user_service_1
+[WARN]      * Container running without CPU restrictions: secrets
+[WARN]      * Container running without CPU restrictions: useless-blog_blog_service_db_1
+[WARN]      * Container running without CPU restrictions: useless-blog_user_service_db_1
+[WARN] 5.12  - Ensure the container's root filesystem is mounted as read only
+[WARN]      * Container running with root FS mounted R/W: useless-blog_edge_service_1
+[WARN]      * Container running with root FS mounted R/W: useless-blog_blog_service_proxy_1
+[WARN]      * Container running with root FS mounted R/W: useless-blog_user_service_proxy_1
+[WARN]      * Container running with root FS mounted R/W: useless-blog_blog_service_1
+[WARN]      * Container running with root FS mounted R/W: useless-blog_user_service_1
+[WARN]      * Container running with root FS mounted R/W: secrets
+[WARN]      * Container running with root FS mounted R/W: useless-blog_blog_service_db_1
+[WARN]      * Container running with root FS mounted R/W: useless-blog_user_service_db_1
+[WARN] 5.13  - Ensure incoming container traffic is binded to a specific host interface
+[WARN]      * Port being bound to wildcard IP: 0.0.0.0 in useless-blog_edge_service_1
+[WARN]      * Port being bound to wildcard IP: 0.0.0.0 in secrets
+[WARN] 5.14  - Ensure 'on-failure' container restart policy is set to '5'
+[WARN]      * MaximumRetryCount is not set to 5: useless-blog_edge_service_1
+[WARN]      * MaximumRetryCount is not set to 5: useless-blog_blog_service_proxy_1
+[WARN]      * MaximumRetryCount is not set to 5: useless-blog_user_service_proxy_1
+[WARN]      * MaximumRetryCount is not set to 5: useless-blog_blog_service_1
+[WARN]      * MaximumRetryCount is not set to 5: useless-blog_user_service_1
+[WARN]      * MaximumRetryCount is not set to 5: secrets
+[WARN]      * MaximumRetryCount is not set to 5: useless-blog_blog_service_db_1
+[WARN]      * MaximumRetryCount is not set to 5: useless-blog_user_service_db_1
+[PASS] 5.15  - Ensure the host's process namespace is not shared
+[PASS] 5.16  - Ensure the host's IPC namespace is not shared
+[PASS] 5.17  - Ensure host devices are not directly exposed to containers
+[INFO] 5.18  - Ensure the default ulimit is overwritten at runtime, only if needed
+[INFO]      * Container no default ulimit override: useless-blog_edge_service_1
+[INFO]      * Container no default ulimit override: useless-blog_blog_service_proxy_1
+[INFO]      * Container no default ulimit override: useless-blog_user_service_proxy_1
+[INFO]      * Container no default ulimit override: useless-blog_blog_service_1
+[INFO]      * Container no default ulimit override: useless-blog_user_service_1
+[INFO]      * Container no default ulimit override: secrets
+[INFO]      * Container no default ulimit override: useless-blog_blog_service_db_1
+[INFO]      * Container no default ulimit override: useless-blog_user_service_db_1
+[PASS] 5.19  - Ensure mount propagation mode is not set to shared
+[PASS] 5.20  - Ensure the host's UTS namespace is not shared
+[PASS] 5.21  - Ensure the default seccomp profile is not Disabled
+[NOTE] 5.22  - Ensure docker exec commands are not used with privileged option
+[NOTE] 5.23  - Ensure docker exec commands are not used with user option
+[PASS] 5.24  - Ensure cgroup usage is confirmed
+[WARN] 5.25  - Ensure the container is restricted from acquiring additional privileges
+[WARN]      * Privileges not restricted: useless-blog_edge_service_1
+[WARN]      * Privileges not restricted: useless-blog_blog_service_proxy_1
+[WARN]      * Privileges not restricted: useless-blog_user_service_proxy_1
+[WARN]      * Privileges not restricted: useless-blog_blog_service_1
+[WARN]      * Privileges not restricted: useless-blog_user_service_1
+[WARN]      * Privileges not restricted: secrets
+[WARN]      * Privileges not restricted: useless-blog_blog_service_db_1
+[WARN]      * Privileges not restricted: useless-blog_user_service_db_1
+[WARN] 5.26  - Ensure container health is checked at runtime
+[WARN]      * Health check not set: useless-blog_edge_service_1
+[WARN]      * Health check not set: useless-blog_blog_service_proxy_1
+[WARN]      * Health check not set: useless-blog_user_service_proxy_1
+[WARN]      * Health check not set: useless-blog_blog_service_1
+[WARN]      * Health check not set: useless-blog_user_service_1
+[WARN]      * Health check not set: secrets
+[WARN]      * Health check not set: useless-blog_blog_service_db_1
+[WARN]      * Health check not set: useless-blog_user_service_db_1
+[INFO] 5.27  - Ensure docker commands always get the latest version of the image
+[WARN] 5.28  - Ensure PIDs cgroup limit is used
+[WARN]      * PIDs limit not set: useless-blog_edge_service_1
+[WARN]      * PIDs limit not set: useless-blog_blog_service_proxy_1
+[WARN]      * PIDs limit not set: useless-blog_user_service_proxy_1
+[WARN]      * PIDs limit not set: useless-blog_blog_service_1
+[WARN]      * PIDs limit not set: useless-blog_user_service_1
+[WARN]      * PIDs limit not set: secrets
+[WARN]      * PIDs limit not set: useless-blog_blog_service_db_1
+[WARN]      * PIDs limit not set: useless-blog_user_service_db_1
+[PASS] 5.29  - Ensure Docker's default bridge docker0 is not used
+[PASS] 5.30  - Ensure the host's user namespaces is not shared
+[PASS] 5.31  - Ensure the Docker socket is not mounted inside any containers
+
+```

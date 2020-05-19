@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, Response
+from flask import Flask, jsonify, Response, request
 
 from model import get_db_connection, get_blogs_table_handle
 
@@ -23,8 +23,8 @@ def make_response(payload, status=200, headers=dict()):
 def list_blogs():
     blogs_table = get_blogs_table_handle()
     res = CONNECTION.execute(blogs_table.select())
-    return make_response({"blog_list": [{"title": title, "author_handle": author_handle, "content": content}
-                        for _id, title, _slug, content, author_handle in res.fetchall()]})
+    return make_response({"blog_list": [{"title": title, "author_handle": author_handle, "content": content, "slug": slug}
+                        for _id, title, slug, content, author_handle in res.fetchall()]})
 
 
 @app.route("/blogs/<slug>")
@@ -34,8 +34,8 @@ def get_blog_by_handle(slug):
 
     blogs_table = get_blogs_table_handle()
     res = CONNECTION.execute(blogs_table.select().where(blogs_table.c.slug == slug))
-    return make_response({"blog_list": [{"title": title, "author_handle": author_handle, "content": content}
-                        for _id, title, _slug, content, author_handle in res.fetchall()]})
+    return make_response({"blog_list": [{"title": title, "author_handle": author_handle, "content": content, "slug": slug}
+                        for _id, title, slug, content, author_handle in res.fetchall()]})
 
 
 @app.route("/blogs/<slug>", methods=["PUT"])
@@ -44,14 +44,20 @@ def update_blog_by_handle(slug):
         return make_response({"error": "invalid slug, must be < 255 characters long"}, status=400)
 
     data = request.get_json(force=True)
-    title = data['title']
-    content = data['content']
+    title = data.get('title')
+    content = data.get('content')
+
+    if not (title or content):
+        return make_response({"error": "at least one of `title` or `content` must be updated"}, status=400)
+
+    values = dict()
+    if title:
+        values.update(title=title)
+    if content:
+        values.update(content=content)
 
     blogs_table = get_blogs_table_handle()
-    res = CONNECTION.execute(blogs_table.update().where(blogs_table.c.slug == slug).values({
-        "title": title,
-        "content": content,
-    }))
+    res = CONNECTION.execute(blogs_table.update().where(blogs_table.c.slug == slug).values(**values))
     return make_response(data, status=201)
 
 
@@ -62,7 +68,7 @@ def delete_blog_by_handle(slug):
 
     blogs_table = get_blogs_table_handle()
     res = CONNECTION.execute(blogs_table.delete().where(blogs_table.c.slug == slug))
-    return make_response({"status": "deleted"}, status=201)
+    return make_response({"status": "deleted"}, status=200)
 
 
 @app.route("/blogs", methods=["POST"])
@@ -79,17 +85,20 @@ def create_user():
         return make_response({"error": "invalid author_handle, must start with `@`"}, status=400)
 
     blogs_table = get_blogs_table_handle()
+
+    slug = to_slug(title)
+
     CONNECTION.execute(blogs_table.insert().values([{
         "content": content,
         "title": title,
         "author_handle": author_handle,
-        "slug": to_slug(title)
+        "slug": slug
     }]))
     return make_response({
         "content": content,
         "title": title,
         "author_handle": author_handle,
-        "slug": to_slug(title)
+        "slug": slug
     }, status=201)
 
 

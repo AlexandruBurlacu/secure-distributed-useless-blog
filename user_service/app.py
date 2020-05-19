@@ -1,35 +1,88 @@
-from flask import Flask, jsonify
+from flask import Flask, request, Response
 
-from model import get_db_connection, select, insert, get_users_table_handle
+import json
+
+from model import get_db_connection, get_users_table_handle
 
 app = Flask(__name__)
 CONNECTION = get_db_connection()
 
+def make_response(payload, status=200, headers=dict()):
+    headers.update({"Content-Type": "application/json"})
+    return Response(json.dumps(payload), status=status, headers=headers)
+
+
 @app.route("/users")
 def list_users():
     users_table = get_users_table_handle()
-    res = CONNECTION.execute(select([users_table]))
-    return jsonify({"user_list": [{"name": name, "handle": handle} for _id, name, handle in res.fetchall()]})
+    res = CONNECTION.execute(users_table.select())
+    return make_response({"user_list": [{"name": name, "handle": handle} for _id, name, handle, _role in res.fetchall()]})
 
 
 @app.route("/users/<handle>")
 def get_user_by_handle(handle):
     if len(handle) > 32:
-        return {"error": "invalid handle, must be < 32 characters long"}, 400
+        return make_response({"error": "invalid handle, must be < 32 characters long"}, status=400)
     
     if not handle.startswith("@"):
-        return {"error": "invalid handle, must start with `@`"}, 400
+        return make_response({"error": "invalid handle, must start with `@`"}, status=400)
 
     users_table = get_users_table_handle()
-    res = CONNECTION.execute(select([users_table]).where(users_table.c.handle == handle))
-    return jsonify({"user_list": [{"name": name, "handle": handle} for _id, name, handle in res.fetchall()]})
+    res = CONNECTION.execute(users_table.select().where(users_table.c.handle == handle))
+    return make_response({"user_list": [{"name": name, "handle": handle} for _id, name, handle, _role in res.fetchall()]})
+
+
+@app.route("/users/<handle>", methods=["PUT"])
+def update_user_by_handle(handle):
+    data = request.get_json(force=True)
+    handle = data['handle']
+    name = data['name']
+
+    if len(handle) > 32:
+        return make_response({"error": "invalid handle, must be < 32 characters long"}, status=400)
+    
+    if not handle.startswith("@"):
+        return make_response({"error": "invalid handle, must start with `@`"}, status=400)
+
+    users_table = get_users_table_handle()
+    res = CONNECTION.execute(users_table.update().where(users_table.c.handle == handle).values({
+        "name": name
+    }))
+    return make_response(data, status=201)
+
+
+@app.route("/users/<handle>", methods=["DELETE"])
+def delete_user_by_handle(handle):
+    if len(handle) > 32:
+        return make_response({"error": "invalid handle, must be < 32 characters long"}, status=400)
+    
+    if not handle.startswith("@"):
+        return make_response({"error": "invalid handle, must start with `@`"}, status=400)
+
+
+    users_table = get_users_table_handle()
+    res = CONNECTION.execute(users_table.delete().where(users_table.c.handle == handle))
+    return make_response({"status": "deleted"}, status=201)
 
 
 @app.route("/users", methods=["POST"])
-def create_user(): # TODO: rewrite
+def create_user():
+    data = request.get_json(force=True)
+    handle = data['handle']
+    name = data['name']
+
+    if len(handle) > 32:
+        return make_response({"error": "invalid handle, must be < 32 characters long"}, status=400)
+    
+    if not handle.startswith("@"):
+        return make_response({"error": "invalid handle, must start with `@`"}, status=400)
+
     users_table = get_users_table_handle()
-    res = CONNECTION.execute(select([users_table]))
-    return jsonify({"user_list": [{"name": name, "handle": handle} for _id, name, handle in res.fetchall()]})
+    CONNECTION.execute(users_table.insert().values([{
+        "name": name,
+        "handle": handle
+    }]))
+    return make_response(data, status=201)
 
 
 if __name__ == "__main__":

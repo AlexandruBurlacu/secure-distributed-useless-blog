@@ -7,9 +7,6 @@ __CONNECTION = None
 __ENGINE = None
 
 
-select = db.select
-insert = db.insert
-
 def get_blogs_table_handle():
     metadata = db.MetaData()
     blogs = db.Table("blogs", metadata, autoload=True, autoload_with=__ENGINE)

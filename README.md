@@ -17,24 +17,23 @@ SELECT * FROM blogs WHERE blogs.author_handle = (SELECT handle FROM users WHERE 
 GET /users (done)
 GET /users/:handle (done)
 GET /users/blogs?user_name=partial_name
-POST /users
-PUT /users/:handle
-DELETE /users/:handle
+POST /users (done)
+PUT /users/:handle (done)
+DELETE /users/:handle (done)
 
 GET /blogs (done)
 GET /blogs/:slug (done)
 GET /blogs?title=partial_title
-POST /blogs
-PUT /blogs/:slug
-DELETE /blogs/:slug
+POST /blogs (done)
+PUT /blogs/:slug (done)
+DELETE /blogs/:slug (done)
 
 POST /auth (via JWT)
 ```
 
 ## TODO
-- Publish api as Swagger docs
-- Validate inputs
-- Implement controllers + rbac
+- Rbac
+- JWT Auth
 - Make Vault PKI and integrate with Nginx
 
 ## What was done
@@ -43,6 +42,8 @@ POST /auth (via JWT)
 - Network (micro-)segmentation
 - HTTPS for outbound connections, self-signed, for now
 - Postgres DBs with SQLAlchemy
+- Validate inputs
+- Publish api as Swagger (not, just in this markdown) docs
 
 ## Used links
 

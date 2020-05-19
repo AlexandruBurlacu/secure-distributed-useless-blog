@@ -6,10 +6,6 @@ import os
 __CONNECTION = None
 __ENGINE = None
 
-
-select = db.select
-insert = db.insert
-
 def get_users_table_handle():
     metadata = db.MetaData()
     users = db.Table("users", metadata, autoload=True, autoload_with=__ENGINE)

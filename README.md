@@ -34,7 +34,6 @@ POST /auth (via JWT)
 ## TODO
 - Rbac
 - JWT Auth
-- Minor chores (PID limits, healthchecks, etc)
 - Make Vault PKI and integrate with Nginx
 
 ## What was done
@@ -45,6 +44,7 @@ POST /auth (via JWT)
 - Postgres DBs with SQLAlchemy
 - Validate inputs
 - Publish api as Swagger (not, just in this markdown) docs
+- Minor chores (Mem/CPU/PID limits, droped docker capabilities, strict DB access control)
 
 
 ### Current issues
@@ -119,8 +119,6 @@ Initializing Tue May 19 21:28:51 UTC 2020
 [WARN]      * Running as root: useless-blog_blog_service_proxy_1
 [WARN]      * Running as root: useless-blog_user_service_proxy_1
 [WARN]      * Running as root: secrets
-[WARN]      * Running as root: useless-blog_blog_service_db_1
-[WARN]      * Running as root: useless-blog_user_service_db_1
 
 [WARN] 4.6  - Ensure HEALTHCHECK instructions have been added to the container image
 [WARN]      * No Healthcheck found: [useless-blog_blog_service:latest]
@@ -153,24 +151,8 @@ Initializing Tue May 19 21:28:51 UTC 2020
 [PASS] 5.7  - Ensure privileged ports are not mapped within containers
 
 [PASS] 5.9  - Ensure the host's network namespace is not shared
-[WARN] 5.10  - Ensure memory usage for container is limited
-[WARN]      * Container running without memory restrictions: useless-blog_edge_service_1
-[WARN]      * Container running without memory restrictions: useless-blog_blog_service_proxy_1
-[WARN]      * Container running without memory restrictions: useless-blog_user_service_proxy_1
-[WARN]      * Container running without memory restrictions: useless-blog_blog_service_1
-[WARN]      * Container running without memory restrictions: useless-blog_user_service_1
-[WARN]      * Container running without memory restrictions: secrets
-[WARN]      * Container running without memory restrictions: useless-blog_blog_service_db_1
-[WARN]      * Container running without memory restrictions: useless-blog_user_service_db_1
-[WARN] 5.11  - Ensure CPU priority is set appropriately on the container
-[WARN]      * Container running without CPU restrictions: useless-blog_edge_service_1
-[WARN]      * Container running without CPU restrictions: useless-blog_blog_service_proxy_1
-[WARN]      * Container running without CPU restrictions: useless-blog_user_service_proxy_1
-[WARN]      * Container running without CPU restrictions: useless-blog_blog_service_1
-[WARN]      * Container running without CPU restrictions: useless-blog_user_service_1
-[WARN]      * Container running without CPU restrictions: secrets
-[WARN]      * Container running without CPU restrictions: useless-blog_blog_service_db_1
-[WARN]      * Container running without CPU restrictions: useless-blog_user_service_db_1
+[PASS] 5.10  - Ensure memory usage for container is limited
+[PASS] 5.11  - Ensure CPU priority is set appropriately on the container
 [WARN] 5.12  - Ensure the container's root filesystem is mounted as read only
 [WARN]      * Container running with root FS mounted R/W: useless-blog_edge_service_1
 [WARN]      * Container running with root FS mounted R/W: useless-blog_blog_service_proxy_1
@@ -229,15 +211,7 @@ Initializing Tue May 19 21:28:51 UTC 2020
 [WARN]      * Health check not set: useless-blog_blog_service_db_1
 [WARN]      * Health check not set: useless-blog_user_service_db_1
 [INFO] 5.27  - Ensure docker commands always get the latest version of the image
-[WARN] 5.28  - Ensure PIDs cgroup limit is used
-[WARN]      * PIDs limit not set: useless-blog_edge_service_1
-[WARN]      * PIDs limit not set: useless-blog_blog_service_proxy_1
-[WARN]      * PIDs limit not set: useless-blog_user_service_proxy_1
-[WARN]      * PIDs limit not set: useless-blog_blog_service_1
-[WARN]      * PIDs limit not set: useless-blog_user_service_1
-[WARN]      * PIDs limit not set: secrets
-[WARN]      * PIDs limit not set: useless-blog_blog_service_db_1
-[WARN]      * PIDs limit not set: useless-blog_user_service_db_1
+[PASS] 5.28  - Ensure PIDs cgroup limit is used
 [PASS] 5.29  - Ensure Docker's default bridge docker0 is not used
 [PASS] 5.30  - Ensure the host's user namespaces is not shared
 [PASS] 5.31  - Ensure the Docker socket is not mounted inside any containers

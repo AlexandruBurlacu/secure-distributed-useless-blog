@@ -37,11 +37,11 @@ POST /auth
 - Make Vault PKI and integrate with Nginx
 
 ## In Progress
-- JWT Auth
 - RBAC
 
 ## What was done
 - Microservices + API Gateway (kinda)
+- JWT Auth
 - NGINX load balancing and proxy-ing
 - Network (micro-)segmentation
 - HTTPS for outbound connections, self-signed, for now

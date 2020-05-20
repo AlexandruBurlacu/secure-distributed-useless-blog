@@ -52,6 +52,7 @@ POST /auth
 
 ### Current issues
 - It is possible to create a blog by an unexistent user
+- The system requires that with `PUT /blogs/<slug>` you pass your handle/id
 
 
 ## Used links

@@ -123,24 +123,30 @@ def get_blog_by_slug(slug):
 @app.route("/users/<handle>", methods=["PUT"])
 @jwt_required
 def update_user_by_handle(handle):
+    data = request.get_json()
     current_user = get_jwt_identity()
-    claims = get_jwt_claims()
+    role = get_jwt_claims().get('role')
 
-    data = request.data
+    if role != "admin" and handle != current_user:
+        return jsonify({"msg": "You don't have the right access level to update other users"}), 400
+
     headers = {"Content-Type": request.headers.get("Content-Type")}
-    user_resp = requests.put(f"http://user_service_proxy/users/{handle}", data=data, headers=headers)
+    user_resp = requests.put(f"http://user_service_proxy/users/{handle}", data=json.dumps(data), headers=headers)
     return user_resp.json(), user_resp.status_code
 
 
 @app.route("/blogs/<slug>", methods=["PUT"])
 @jwt_required
 def update_blog_by_slug(slug):
+    data = request.get_json()
     current_user = get_jwt_identity()
-    claims = get_jwt_claims()
+    role = get_jwt_claims().get('role')
 
-    data = request.data
+    if role != "admin" and data.get("author_handle", None) != current_user:
+        return jsonify({"msg": "You don't have the right access level to update other users' blogs"}), 400
+
     headers = {"Content-Type": request.headers.get("Content-Type")}
-    blog_resp = requests.put(f"http://blog_service_proxy/blogs/{slug}", data=data, headers=headers)
+    blog_resp = requests.put(f"http://blog_service_proxy/blogs/{slug}", data=json.dumps(data), headers=headers)
     return blog_resp.json(), blog_resp.status_code
 
 
@@ -148,7 +154,10 @@ def update_blog_by_slug(slug):
 @jwt_required
 def delete_user_by_handle(handle):
     current_user = get_jwt_identity()
-    claims = get_jwt_claims()
+    role = get_jwt_claims().get('role')
+
+    if role != "admin" and handle != current_user:
+        return jsonify({"msg": "You don't have the right access level to delete other users"}), 400
 
     user_resp = requests.delete(f"http://user_service_proxy/users/{handle}")
     return user_resp.json(), user_resp.status_code
@@ -158,7 +167,11 @@ def delete_user_by_handle(handle):
 @jwt_required
 def delete_blog_by_slug(slug):
     current_user = get_jwt_identity()
-    claims = get_jwt_claims()
+    role = get_jwt_claims().get("role")
+    data = requests.get(f"http://blog_service_proxy/blogs/{slug}").json()
+
+    if role != "admin" and data.get("author_handle", None) != current_user:
+        return jsonify({"msg": "You don't have the right access level to delete other users' blogs"}), 400
 
     blog_resp = requests.delete(f"http://blog_service_proxy/blogs/{slug}")
     return blog_resp.json(), blog_resp.status_code

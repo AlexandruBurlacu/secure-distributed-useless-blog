@@ -22,10 +22,10 @@ def list_users():
 @app.route("/users/<handle>")
 def get_user_by_handle(handle):
     if len(handle) > 32:
-        return make_response({"error": "invalid handle, must be < 32 characters long"}, status=400)
+        return make_response({"msg": "invalid handle, must be < 32 characters long"}, status=400)
     
     if not handle.startswith("@"):
-        return make_response({"error": "invalid handle, must start with `@`"}, status=400)
+        return make_response({"msg": "invalid handle, must start with `@`"}, status=400)
 
     users_table = get_users_table_handle()
     res = CONNECTION.execute(users_table.select().where(users_table.c.handle == handle))
@@ -35,10 +35,10 @@ def get_user_by_handle(handle):
 @app.route("/users/<handle>/_login")
 def __login(handle):
     if len(handle) > 32:
-        return make_response({"error": "invalid handle, must be < 32 characters long"}, status=400)
+        return make_response({"msg": "invalid handle, must be < 32 characters long"}, status=400)
     
     if not handle.startswith("@"):
-        return make_response({"error": "invalid handle, must start with `@`"}, status=400)
+        return make_response({"msg": "invalid handle, must start with `@`"}, status=400)
 
     users_table = get_users_table_handle()
     res = CONNECTION.execute(users_table.select().where(users_table.c.handle == handle))
@@ -53,10 +53,10 @@ def update_user_by_handle(handle):
     name = data['name']
 
     if len(handle) > 32:
-        return make_response({"error": "invalid handle, must be < 32 characters long"}, status=400)
+        return make_response({"msg": "invalid handle, must be < 32 characters long"}, status=400)
     
     if not handle.startswith("@"):
-        return make_response({"error": "invalid handle, must start with `@`"}, status=400)
+        return make_response({"msg": "invalid handle, must start with `@`"}, status=400)
 
     users_table = get_users_table_handle()
     res = CONNECTION.execute(users_table.update().where(users_table.c.handle == handle).values(name=name))
@@ -66,10 +66,10 @@ def update_user_by_handle(handle):
 @app.route("/users/<handle>", methods=["DELETE"])
 def delete_user_by_handle(handle):
     if len(handle) > 32:
-        return make_response({"error": "invalid handle, must be < 32 characters long"}, status=400)
+        return make_response({"msg": "invalid handle, must be < 32 characters long"}, status=400)
     
     if not handle.startswith("@"):
-        return make_response({"error": "invalid handle, must start with `@`"}, status=400)
+        return make_response({"msg": "invalid handle, must start with `@`"}, status=400)
 
 
     users_table = get_users_table_handle()
@@ -84,10 +84,10 @@ def create_user():
     name = data['name']
 
     if len(handle) > 32:
-        return make_response({"error": "invalid handle, must be < 32 characters long"}, status=400)
+        return make_response({"msg": "invalid handle, must be < 32 characters long"}, status=400)
     
     if not handle.startswith("@"):
-        return make_response({"error": "invalid handle, must start with `@`"}, status=400)
+        return make_response({"msg": "invalid handle, must start with `@`"}, status=400)
 
     users_table = get_users_table_handle()
     CONNECTION.execute(users_table.insert().values([{

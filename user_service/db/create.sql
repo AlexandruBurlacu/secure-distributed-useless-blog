@@ -28,4 +28,4 @@ INSERT INTO users (name, handle, password) VALUES
     ('Professor Xavier', '@profxavier', '$2b$12$0UrimppLS9kNfSS5X.Mp0eLxdSvuHNq9cMqeW0LCe7XbQ45Hn3BSe');
 
 INSERT INTO users (name, handle, user_role, password) VALUES
-    ('The Almighty', '@admin', "admin", '$2b$12$KeKLW5ri.iLu7LWTrcOABuZDBPJ9lR/jGOMOM75mdX6If2MPehbZ2');
+    ('The Almighty', '@admin', 'admin', '$2b$12$KeKLW5ri.iLu7LWTrcOABuZDBPJ9lR/jGOMOM75mdX6If2MPehbZ2');

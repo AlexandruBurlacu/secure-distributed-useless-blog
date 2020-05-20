@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, jsonify
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
-    get_jwt_identity
+    get_jwt_identity, get_jwt_claims
 )
 from security import authenticate
 import requests
 import random
+
+import json
 
 import time
 import os
@@ -41,7 +43,7 @@ def login():
         return jsonify({"msg": "Bad username or password"}), 401
 
     # Identity can be any data that is json serializable
-    access_token = create_access_token(identity=username)
+    access_token = create_access_token(identity=username, fresh=True, user_claims={"role": user.role})
     return jsonify(access_token=access_token), 200
 
 
@@ -73,20 +75,36 @@ def list_blogs():
 @app.route("/users", methods=["POST"])
 @jwt_required
 def create_users():
+    data = request.get_json()
     current_user = get_jwt_identity()
-    data = request.data
+    role = get_jwt_claims().get('role')
+
+    if role != "admin" and data.get("handle", None):
+        return jsonify({"msg": "You don't have the right access level to set `handle`"}), 400
+
+    if role == "user":
+        data["handle"] = current_user
+
     headers = {"Content-Type": request.headers.get("Content-Type")}
-    user_resp = requests.post("http://user_service_proxy/users", data=data, headers=headers)
+    user_resp = requests.post("http://user_service_proxy/users", data=json.dumps(data), headers=headers)
     return user_resp.json(), user_resp.status_code
 
 
 @app.route("/blogs", methods=["POST"])
 @jwt_required
 def create_blogs():
+    data = request.get_json()
     current_user = get_jwt_identity()
-    data = request.data
+    role = get_jwt_claims().get('role')
+
+    if role != "admin" and data.get("author_handle", None):
+        return jsonify({"msg": "You don't have the right access level to set `author_handle`"}), 400
+
+    if role == "user":
+        data["author_handle"] = current_user
+
     headers = {"Content-Type": request.headers.get("Content-Type")}
-    blog_resp = requests.post("http://blog_service_proxy/blogs", data=data, headers=headers)
+    blog_resp = requests.post("http://blog_service_proxy/blogs", data=json.dumps(data), headers=headers)
     return blog_resp.json(), blog_resp.status_code
 
 
@@ -106,6 +124,8 @@ def get_blog_by_slug(slug):
 @jwt_required
 def update_user_by_handle(handle):
     current_user = get_jwt_identity()
+    claims = get_jwt_claims()
+
     data = request.data
     headers = {"Content-Type": request.headers.get("Content-Type")}
     user_resp = requests.put(f"http://user_service_proxy/users/{handle}", data=data, headers=headers)
@@ -116,6 +136,8 @@ def update_user_by_handle(handle):
 @jwt_required
 def update_blog_by_slug(slug):
     current_user = get_jwt_identity()
+    claims = get_jwt_claims()
+
     data = request.data
     headers = {"Content-Type": request.headers.get("Content-Type")}
     blog_resp = requests.put(f"http://blog_service_proxy/blogs/{slug}", data=data, headers=headers)
@@ -126,6 +148,8 @@ def update_blog_by_slug(slug):
 @jwt_required
 def delete_user_by_handle(handle):
     current_user = get_jwt_identity()
+    claims = get_jwt_claims()
+
     user_resp = requests.delete(f"http://user_service_proxy/users/{handle}")
     return user_resp.json(), user_resp.status_code
 
@@ -134,6 +158,8 @@ def delete_user_by_handle(handle):
 @jwt_required
 def delete_blog_by_slug(slug):
     current_user = get_jwt_identity()
+    claims = get_jwt_claims()
+
     blog_resp = requests.delete(f"http://blog_service_proxy/blogs/{slug}")
     return blog_resp.json(), blog_resp.status_code
 

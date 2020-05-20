@@ -36,12 +36,11 @@ POST /auth
 - 2 more routes `GET /users/blogs?user_name=partial_name` and `GET /blogs?title=partial_title`
 - Make Vault PKI and integrate with Nginx
 
-## In Progress
-- RBAC
 
 ## What was done
 - Microservices + API Gateway (kinda)
 - JWT Auth
+- RBAC
 - NGINX load balancing and proxy-ing
 - Network (micro-)segmentation
 - HTTPS for outbound connections, self-signed, for now

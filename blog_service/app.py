@@ -30,7 +30,7 @@ def list_blogs():
 @app.route("/blogs/<slug>")
 def get_blog_by_handle(slug):
     if len(slug) > 256:
-        return make_response({"error": "invalid slug, must be < 255 characters long"}, status=400)
+        return make_response({"msg": "invalid slug, must be < 255 characters long"}, status=400)
 
     blogs_table = get_blogs_table_handle()
     res = CONNECTION.execute(blogs_table.select().where(blogs_table.c.slug == slug))
@@ -41,14 +41,14 @@ def get_blog_by_handle(slug):
 @app.route("/blogs/<slug>", methods=["PUT"])
 def update_blog_by_handle(slug):
     if len(slug) > 256:
-        return make_response({"error": "invalid slug, must be < 255 characters long"}, status=400)
+        return make_response({"msg": "invalid slug, must be < 255 characters long"}, status=400)
 
     data = request.get_json(force=True)
     title = data.get('title')
     content = data.get('content')
 
     if not (title or content):
-        return make_response({"error": "at least one of `title` or `content` must be updated"}, status=400)
+        return make_response({"msg": "at least one of `title` or `content` must be updated"}, status=400)
 
     values = dict()
     if title:
@@ -64,7 +64,7 @@ def update_blog_by_handle(slug):
 @app.route("/blogs/<slug>", methods=["DELETE"])
 def delete_blog_by_handle(slug):
     if len(slug) > 256:
-        return make_response({"error": "invalid slug, must be < 255 characters long"}, status=400)
+        return make_response({"msg": "invalid slug, must be < 255 characters long"}, status=400)
 
     blogs_table = get_blogs_table_handle()
     res = CONNECTION.execute(blogs_table.delete().where(blogs_table.c.slug == slug))
@@ -79,10 +79,10 @@ def create_user():
     author_handle = data['author_handle']
 
     if len(author_handle) > 32:
-        return make_response({"error": "invalid author_handle, must be < 32 characters long"}, status=400)
+        return make_response({"msg": "invalid author_handle, must be < 32 characters long"}, status=400)
     
     if not author_handle.startswith("@"):
-        return make_response({"error": "invalid author_handle, must start with `@`"}, status=400)
+        return make_response({"msg": "invalid author_handle, must start with `@`"}, status=400)
 
     blogs_table = get_blogs_table_handle()
 

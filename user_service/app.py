@@ -44,7 +44,7 @@ def __login(handle):
     res = CONNECTION.execute(users_table.select().where(users_table.c.handle == handle))
     user_tuple = res.fetchone()
     _id, _name, handle, role, psswd = user_tuple
-    return make_response({"password": psswd, "handle": handle, "role": role, "id": handle})
+    return make_response({"password": psswd, "handle": handle, "role": role})
 
 
 @app.route("/users/<handle>", methods=["PUT"])

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from flask_jwt import JWT, jwt_required
-from security import authenticate, identity
+from security import AuthHandle
 import requests
 import random
 
@@ -9,9 +9,11 @@ import os
 
 app = Flask(__name__)
 app.secret_key = os.environ["JWT_SECRET"]  # Make this long, random, and secret in a real app!
-app.config["JWT_AUTH_USERNAME_KEY"] = "username"
-app.config["JWT_AUTH_PASSWORD_KEY"] = "password"
-jwt = JWT(app, authenticate, identity)
+# app.config["JWT_AUTH_USERNAME_KEY"] = "username"
+# app.config["JWT_AUTH_PASSWORD_KEY"] = "password"
+# jwt = JWT(app, authenticate, identity)
+
+@app.route("/auth", methods=["POST"])(AuthHandle(request))
 
 
 def make_catchphrase():
@@ -20,7 +22,6 @@ def make_catchphrase():
 
 def make_full_user_stories(user_list):
     return [(idx, user_name, make_catchphrase()) for idx, user_name in enumerate(user_list)]
-
 
 # basic route
 @app.route("/")

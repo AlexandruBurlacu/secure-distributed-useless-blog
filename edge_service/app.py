@@ -1,11 +1,18 @@
 from flask import Flask, render_template, request
+from flask_jwt import JWT, jwt_required
+from security import authenticate, identity
 import requests
 import random
 
 import time
+import os
 
 app = Flask(__name__)
-# https://stackoverflow.com/questions/24892035/how-can-i-get-the-named-parameters-from-a-url-using-flask
+app.secret_key = os.environ["JWT_SECRET"]  # Make this long, random, and secret in a real app!
+app.config["JWT_AUTH_USERNAME_KEY"] = "username"
+app.config["JWT_AUTH_PASSWORD_KEY"] = "password"
+jwt = JWT(app, authenticate, identity)
+
 
 def make_catchphrase():
     return random.choice(["To be or not to be?", "Got milk?", "The dude abides"])
@@ -96,15 +103,11 @@ def delete_blog_by_slug(slug):
     return blog_resp.json(), blog_resp.status_code
 
 
-@app.route("/test") # NICEEEEEE! ^_^
-def test_selects():
-    user_resp = requests.get("http://user_service_proxy/users/@profxavier")
-    user_list = user_resp.json()
 
-    blog_resp = requests.get("http://blog_service_proxy/blogs/disability-is-not-the-end-5765")
-    blog_list = blog_resp.json()
-
-    return {"user": user_list, "blog": blog_list}
+@app.route('/protected')
+@jwt_required()
+def protected():
+    return '%s' % current_identity
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

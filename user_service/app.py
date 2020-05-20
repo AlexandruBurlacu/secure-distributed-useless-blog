@@ -16,7 +16,7 @@ def make_response(payload, status=200, headers=dict()):
 def list_users():
     users_table = get_users_table_handle()
     res = CONNECTION.execute(users_table.select())
-    return make_response({"user_list": [{"name": name, "handle": handle} for _id, name, handle, _role in res.fetchall()]})
+    return make_response({"user_list": [{"name": name, "handle": handle} for _id, name, handle, _role, _psswd in res.fetchall()]})
 
 
 @app.route("/users/<handle>")
@@ -29,7 +29,22 @@ def get_user_by_handle(handle):
 
     users_table = get_users_table_handle()
     res = CONNECTION.execute(users_table.select().where(users_table.c.handle == handle))
-    return make_response({"user_list": [{"name": name, "handle": handle} for _id, name, handle, _role in res.fetchall()]})
+    return make_response({"user_list": [{"name": name, "handle": handle} for _id, name, handle, _role, _psswd in res.fetchall()]})
+
+
+@app.route("/users/<handle>/_login")
+def __login(handle):
+    if len(handle) > 32:
+        return make_response({"error": "invalid handle, must be < 32 characters long"}, status=400)
+    
+    if not handle.startswith("@"):
+        return make_response({"error": "invalid handle, must start with `@`"}, status=400)
+
+    users_table = get_users_table_handle()
+    res = CONNECTION.execute(users_table.select().where(users_table.c.handle == handle))
+    user_tuple = res.fetchone()
+    _id, _name, handle, role, psswd = user_tuple
+    return make_response({"password": psswd, "handle": handle, "role": role, "id": handle})
 
 
 @app.route("/users/<handle>", methods=["PUT"])

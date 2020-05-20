@@ -14,27 +14,31 @@ SELECT * FROM blogs WHERE blogs.author_handle = (SELECT handle FROM users WHERE 
 
 ## The API
 ```
-GET /users (done)
-GET /users/:handle (done)
+GET /users
+GET /users/:handle
+GET /users/:handle/_login (internal/private)
 GET /users/blogs?user_name=partial_name
-POST /users (done)
-PUT /users/:handle (done)
-DELETE /users/:handle (done)
+POST /users
+PUT /users/:handle
+DELETE /users/:handle
 
-GET /blogs (done)
-GET /blogs/:slug (done)
+GET /blogs
+GET /blogs/:slug
 GET /blogs?title=partial_title
-POST /blogs (done)
-PUT /blogs/:slug (done)
-DELETE /blogs/:slug (done)
+POST /blogs
+PUT /blogs/:slug
+DELETE /blogs/:slug
 
-POST /auth (via JWT)
+POST /auth
 ```
 
 ## TODO
-- Rbac
-- JWT Auth
+- 2 more routes `GET /users/blogs?user_name=partial_name` and `GET /blogs?title=partial_title`
 - Make Vault PKI and integrate with Nginx
+
+## In Progress
+- JWT Auth
+- RBAC
 
 ## What was done
 - Microservices + API Gateway (kinda)

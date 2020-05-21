@@ -1,6 +1,9 @@
 # `I Ain't Gonna Need It` blog, a masters project
 
-Below you can find the links that I used to learn how to do a distributed + secure application, and some idea-pads. Enjoy.
+Below you can find the links that I used to learn how to do a distributed + secure application, and some ideas/logs. Enjoy.
+
+<div style="text-align:center"><img src="./SystemDesign.png" /></div>
+
 
 ## DB Schema (not really)
 
@@ -11,6 +14,12 @@ Use Case: Find all blogs that are written by someone Franklin:
 SELECT * FROM blogs WHERE blogs.author_handle = (SELECT handle FROM users WHERE name MATCHES "% Franklin %");
 -- kinda, what a shame my database is divided between microservices
 ```
+
+
+### Current issues
+- It is possible to create a blog by an unexistent user
+- The system requires that with `PUT /blogs/<slug>` you pass your handle/id
+
 
 ## The API
 
@@ -60,9 +69,11 @@ DELETE /blogs/:slug
 - Minor chores (Mem/CPU/PID limits, droped docker capabilities, strict DB access control)
 
 
-### Current issues
-- It is possible to create a blog by an unexistent user
-- The system requires that with `PUT /blogs/<slug>` you pass your handle/id
+## Nice to do
+- Enable services and DBs to be highly available (HA)
+- Remove code duplication
+- Maybe add one more service
+- Observability (like Jaeger for tracing and hack it for logging)
 
 
 ## Used links

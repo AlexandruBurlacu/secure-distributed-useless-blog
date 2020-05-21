@@ -19,7 +19,7 @@ services:
       - ./volumes/logs:/vault/logs
     entrypoint: vault server -config=/vault/config/vault.json
     networks:
-      - global_network
+      - secrets_network
 
   edge_service:
     cpus: 4
@@ -57,6 +57,7 @@ services:
       - SETFCAP
     networks:
       - global_network
+      - secrets_network
 
 
   user_service_proxy:
@@ -70,6 +71,7 @@ services:
     networks:
       - user_service_network
       - global_network
+      - secrets_network
     depends_on:
       - user_service
 
@@ -106,7 +108,7 @@ services:
       - SETFCAP
     networks:
       - user_service_network
-      # - global_network
+      - secrets_network
 
   user_service_db:
     cpus: 4
@@ -136,6 +138,7 @@ services:
     networks:
       - blog_service_network
       - global_network
+      - secrets_network
     depends_on:
       - blog_service
 
@@ -172,7 +175,7 @@ services:
       - SETFCAP
     networks:
       - blog_service_network
-      # - global_network
+      - secrets_network
 
   blog_service_db:
     cpus: 4
@@ -195,3 +198,4 @@ networks:
   user_service_network:
   blog_service_network:
   global_network:
+  secrets_network:

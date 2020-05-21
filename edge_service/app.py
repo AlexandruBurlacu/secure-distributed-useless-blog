@@ -73,18 +73,8 @@ def list_blogs():
 
 
 @app.route("/users", methods=["POST"])
-@jwt_required
 def create_users():
     data = request.get_json()
-    current_user = get_jwt_identity()
-    role = get_jwt_claims().get('role')
-
-    if role != "admin" and data.get("handle", None):
-        return jsonify({"msg": "You don't have the right access level to set `handle`"}), 400
-
-    if role == "user":
-        data["handle"] = current_user
-
     headers = {"Content-Type": request.headers.get("Content-Type")}
     user_resp = requests.post("http://user_service_proxy/users", data=json.dumps(data), headers=headers)
     return user_resp.json(), user_resp.status_code
@@ -175,6 +165,40 @@ def delete_blog_by_slug(slug):
 
     blog_resp = requests.delete(f"http://blog_service_proxy/blogs/{slug}")
     return blog_resp.json(), blog_resp.status_code
+
+
+@app.route("/blogs/search", methods=["GET"])
+def search_blog_by_title_or_author():
+    title = request.args.get("title", None)
+    author = request.args.get("author", None)
+
+    if author and title:
+        return jsonify({"msg": "Search either by `title` or `author`"}), 400
+
+    if title:
+        blog_resp = requests.get(f"http://blog_service_proxy/blogs/search?title={title}")
+    elif author:
+        blog_resp = requests.get(f"http://blog_service_proxy/blogs/search?author={author}")
+    else:
+        return jsonify({"msg": "Set either the `title` or the `author`"}), 400
+
+    return blog_resp.json(), blog_resp.status_code
+
+
+@app.route("/users/blogs", methods=["GET"])
+def search_blogs_by_user():
+    user_name = request.args.get("user_name", None)
+
+    user_resp = requests.get(f"http://user_service_proxy/users/search?user_name={user_name}")
+
+    user_results = user_resp.json().get("results")
+
+    resps = []
+    for user in user_results:
+        user_handle = user.get("handle")
+        resps.extend(requests.get(f"http://blog_service_proxy/blogs/search?author={user_handle}").json().get("results"))
+
+    return jsonify({"results": resps})
 
 
 if __name__ == "__main__":

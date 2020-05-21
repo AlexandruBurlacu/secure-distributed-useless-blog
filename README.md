@@ -4,7 +4,7 @@ Below you can find the links that I used to learn how to do a distributed + secu
 
 ## DB Schema (not really)
 
-There are `users` and there are `blogs`. Every user can have multiple blog posts. A blog has just one author/user. 1:n relation.
+There are `users(PK(handle), name, user_role, password)` and there are `blogs(title, author_handle, content, PK(slug))`. Every user can have multiple blog posts. A blog has just one author/user. 1:n relation.
 
 Use Case: Find all blogs that are written by someone Franklin:
 ```sql
@@ -13,27 +13,37 @@ SELECT * FROM blogs WHERE blogs.author_handle = (SELECT handle FROM users WHERE 
 ```
 
 ## The API
+
+All the routes require and respond with `Content-Type: application/json`.
+
+Don't need authorization:
+
 ```
 GET /users
 GET /users/:handle
-GET /users/:handle/_login (internal/private)
-GET /users/blogs?user_name=partial_name
-POST /users
-PUT /users/:handle
-DELETE /users/:handle
+GET /users/blogs?user_name=user_name
 
 GET /blogs
 GET /blogs/:slug
-GET /blogs?title=partial_title
+GET /blogs/search?title=partial_title
+GET /blogs/search?author=partial_author
+
+POST /auth
+POST /users
+```
+
+Need authorization:
+
+```
+PUT /users/:handle
+DELETE /users/:handle
+
 POST /blogs
 PUT /blogs/:slug
 DELETE /blogs/:slug
-
-POST /auth
 ```
 
 ## TODO
-- 2 more routes `GET /users/blogs?user_name=partial_name` and `GET /blogs?title=partial_title`
 - Make Vault PKI and integrate with Nginx
 
 

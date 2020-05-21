@@ -4,12 +4,11 @@ CREATE DATABASE blogs_dev;
 \connect blogs_dev
 
 CREATE TABLE blogs (
-    id int NOT NULL GENERATED ALWAYS AS IDENTITY,
     title VARCHAR(128) NOT NULL,
     slug VARCHAR(256) NOT NULL UNIQUE,
     content TEXT NOT NULL,
     author_handle VARCHAR(32) NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (slug)
 );
 
 GRANT SELECT, UPDATE(title, content), INSERT(title, slug, content, author_handle), DELETE ON blogs TO postgres;

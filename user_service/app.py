@@ -30,7 +30,8 @@ def get_user_by_handle(handle):
 
     users_table = get_users_table_handle()
     res = CONNECTION.execute(users_table.select().where(users_table.c.handle == handle))
-    return make_response({"user_list": [{"name": name, "handle": handle} for name, handle, _role, _psswd in res.fetchall()]})
+    name, handle, _role, _psswd = res.fetchone()
+    return make_response({"name": name, "handle": handle})
 
 
 @app.route("/users/<handle>/_login")

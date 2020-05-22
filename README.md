@@ -52,6 +52,8 @@ PUT /blogs/:slug
 DELETE /blogs/:slug
 ```
 
+Check the `test.kindof.sh` file to get a better understanding of input format for the API.
+
 ## TODO
 - Make Vault PKI and integrate with Nginx
 

@@ -34,8 +34,8 @@ def get_blog_by_handle(slug):
 
     blogs_table = get_blogs_table_handle()
     res = CONNECTION.execute(blogs_table.select().where(blogs_table.c.slug == slug))
-    return make_response({"blog_list": [{"title": title, "author_handle": author_handle, "content": content, "slug": slug}
-                        for title, slug, content, author_handle in res.fetchall()]})
+    title, slug, content, author_handle = res.fetchone()
+    return make_response({"title": title, "author_handle": author_handle, "content": content, "slug": slug})
 
 
 @app.route("/blogs/<slug>", methods=["PUT"])
